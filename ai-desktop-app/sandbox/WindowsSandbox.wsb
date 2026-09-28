@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration>
+  <VGpu>Disable</VGpu>
+  <Networking>Disable</Networking>
+  <MappedFolders>
+    <MappedFolder>
+      <HostFolder>C:\LocalMind\sandbox\in</HostFolder>
+      <SandboxFolder>C:\work\in</SandboxFolder>
+      <ReadOnly>true</ReadOnly>
+    </MappedFolder>
+    <MappedFolder>
+      <HostFolder>C:\LocalMind\sandbox\out</HostFolder>
+      <SandboxFolder>C:\work\out</SandboxFolder>
+      <ReadOnly>false</ReadOnly>
+    </MappedFolder>
+  </MappedFolders>
+  <LogonCommand>
+    <Command>powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File C:\work\in\bootstrap.ps1</Command>
+  </LogonCommand>
+</Configuration>
