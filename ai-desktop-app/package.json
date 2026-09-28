@@ -1,0 +1,23 @@
+{
+  "name": "localmind-ai",
+  "version": "1.0.0",
+  "description": "Local AI desktop assistant for Windows with persistent memory",
+  "main": "main.js",
+  "author": "LocalMind",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis"
+  },
+  "devDependencies": {
+    "electron": "^38.1.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.localmind.ai",
+    "productName": "LocalMind AI",
+    "files": ["main.js", "preload.js", "index.html", "styles.css"],
+    "win": { "target": [{ "target": "nsis", "arch": ["x64"] }] },
+    "nsis": { "oneClick": false, "perMachine": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true, "createStartMenuShortcut": true }
+  }
+}
