@@ -1,0 +1,95 @@
+services:
+  - type: web
+    name: spark
+    runtime: node
+    plan: free
+    rootDir: .
+    buildCommand: bash spark-source.sh && cd spark/server && npm install && npm run build
+    preDeployCommand: bash spark-source.sh && cd spark/server && npx prisma migrate deploy
+    startCommand: bash spark-source.sh && cd spark/server && npx concurrently "node dist/index.js" "node dist/worker.js"
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: PORT
+        value: "10000"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: spark-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: spark-redis
+          property: connectionString
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: CLIENT_URL
+        fromService:
+          type: web
+          name: spark-web
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: APP_BASE_URL
+        fromService:
+          type: web
+          name: spark-web
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: S3_ENDPOINT
+        sync: false
+      - key: S3_REGION
+        value: "auto"
+      - key: S3_BUCKET
+        sync: false
+      - key: S3_ACCESS_KEY
+        sync: false
+      - key: S3_SECRET_KEY
+        sync: false
+      - key: S3_FORCE_PATH_STYLE
+        value: "false"
+      - key: S3_PUBLIC_BASE_URL
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: SMTP_FROM
+        sync: false
+      - key: IMAGE_MODERATION_URL
+        sync: false
+      - key: IMAGE_MODERATION_TOKEN
+        sync: false
+      - key: VAPID_SUBJECT
+        sync: false
+      - key: VAPID_PUBLIC_KEY
+        sync: false
+      - key: VAPID_PRIVATE_KEY
+        sync: false
+    autoDeploy: true
+
+  - type: web
+    name: spark-web
+    runtime: static
+    buildCommand: bash spark-source.sh && cd spark/client && npm install && npm run build
+    staticPublishPath: spark/client/dist
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: spark
+          envVarKey: RENDER_EXTERNAL_URL
+    autoDeploy: true
+
+  - type: keyvalue
+    name: spark-redis
+    plan: free
+
+  - type: postgres
+    name: spark-db
+    plan: free
+    databaseName: spark
+    user: spark
+    ipAllowList: []
