@@ -1,0 +1,1 @@
+{"name":"spark-production","private":true,"scripts":{"install:all":"npm --prefix server install && npm --prefix client install","dev":"concurrently \"npm --prefix server run dev\" \"npm --prefix client run dev\"","build":"npm --prefix client run build"},"devDependencies":{"concurrently":"latest"}}
