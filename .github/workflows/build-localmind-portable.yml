@@ -1,0 +1,35 @@
+name: Build LocalMind AI Autonomous Windows
+on:
+  push:
+    branches: [ localmind-portable ]
+    paths:
+      - 'ai-desktop-app/**'
+      - '.github/workflows/build-localmind-portable.yml'
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: ai-desktop-app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ai-desktop-app/package.json
+      - name: Install dependencies
+        run: npm install
+      - name: Build Windows installer
+        run: npm run dist
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LocalMind-AI-Autonomous-Windows
+          path: ai-desktop-app/dist/*
+          if-no-files-found: error
+          retention-days: 30
