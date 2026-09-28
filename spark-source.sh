@@ -46,6 +46,7 @@ const pkgPath = "spark/server/package.json";
 const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
 pkg.dependencies = pkg.dependencies || {};
 pkg.devDependencies = pkg.devDependencies || {};
+pkg.dependencies["dotenv"] = "18.0.4";
 pkg.dependencies["@prisma/client"] = "6.19.0";
 pkg.devDependencies.prisma = "6.19.0";
 pkg.scripts = pkg.scripts || {};
@@ -55,4 +56,4 @@ fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
 NODE
 
 rm -rf spark/server/node_modules
-echo "Spark source restored; Prisma 6.19.0 pinned, NodeNext restored, ioredis named export normalized"
+echo "Spark source restored; Prisma 6.19.0, NodeNext, ioredis named export, dotenv 18.0.4"
