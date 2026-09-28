@@ -3,7 +3,7 @@ set -euo pipefail
 mkdir -p spark
 cat .spark-bundle/part* | base64 -d | xz -d | tar -x -C spark
 
-# The project uses Prisma ORM 7 APIs; Prisma 8 CLI is the current "latest"
+# The project uses Prisma ORM 7 APIs; Prisma 8 is currently the "latest"
 # and intentionally removed schema-driven generate/migrate commands.
 node <<'NODE'
 const fs = require("fs");
@@ -16,4 +16,5 @@ pkg.devDependencies.prisma = "^7.10.0";
 fs.writeFileSync(path, JSON.stringify(pkg, null, 2) + "\n");
 NODE
 
-echo "Spark source restored"
+rm -rf spark/server/node_modules
+echo "Spark source restored; Prisma deps pinned to 7.10.x"
