@@ -1,0 +1,34 @@
+{
+  "name": "LocalMind Universal Runtime Bundle",
+  "version": "1.0.0",
+  "platform": "windows-x64",
+  "network": "disabled-in-sandbox",
+  "runtimes": [
+    {"id":"python","version":"3.12","kind":"interpreter"},
+    {"id":"node","version":"22","kind":"runtime"},
+    {"id":"typescript","version":"latest","kind":"toolchain","requires":"node"},
+    {"id":"powershell","version":"7","kind":"shell"},
+    {"id":"gcc","version":"latest","kind":"compiler"},
+    {"id":"gxx","version":"latest","kind":"compiler"},
+    {"id":"dotnet","version":"8","kind":"sdk"},
+    {"id":"java","version":"21","kind":"jdk"},
+    {"id":"go","version":"1.23","kind":"compiler"},
+    {"id":"rust","version":"stable","kind":"toolchain"},
+    {"id":"ruby","version":"3.3","kind":"interpreter"},
+    {"id":"php","version":"8.3","kind":"interpreter"},
+    {"id":"kotlin","version":"2.0","kind":"compiler"},
+    {"id":"swift","version":"6","kind":"compiler","optional":true,"note":"Windows toolchain availability must be verified on build host"},
+    {"id":"lua","version":"5.4","kind":"interpreter"},
+    {"id":"r","version":"4.4","kind":"interpreter"},
+    {"id":"perl","version":"5.40","kind":"interpreter"},
+    {"id":"bash","version":"5","kind":"shell"},
+    {"id":"sqlite","version":"3","kind":"database"}
+  ],
+  "dependencyManagers": ["pip","npm","nuget","cargo","gem","composer","maven","gradle"],
+  "policy": {
+    "networkDuringExecution": false,
+    "installDependenciesAtRuntime": false,
+    "allowHostFileAccess": false,
+    "allowSecrets": false
+  }
+}
