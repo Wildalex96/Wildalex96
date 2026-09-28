@@ -1,0 +1,30 @@
+{
+  "name": "localmind-ai",
+  "version": "1.1.0",
+  "description": "LocalMind AI — autonomous local Windows AI assistant",
+  "main": "main.js",
+  "author": "LocalMind",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis"
+  },
+  "devDependencies": {
+    "electron": "^38.0.0",
+    "electron-builder": "^26.0.0"
+  },
+  "build": {
+    "appId": "com.localmind.ai",
+    "productName": "LocalMind AI",
+    "asar": true,
+    "files": ["**/*", "!dist/**"],
+    "win": { "target": [{ "target": "nsis", "arch": ["x64"] }] },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "runAfterFinish": true
+    }
+  }
+}
