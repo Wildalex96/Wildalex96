@@ -1,12 +1,5 @@
 const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('localmind', {
-  chat: (payload) => ipcRenderer.invoke('chat', payload),
-  getSettings: () => ipcRenderer.invoke('settings:get'),
-  setSettings: (value) => ipcRenderer.invoke('settings:set', value),
-  getMemory: () => ipcRenderer.invoke('memory:get'),
-  clearMemory: () => ipcRenderer.invoke('memory:clear'),
-  test: () => ipcRenderer.invoke('test'),
-  bootstrapStatus: () => ipcRenderer.invoke('bootstrap:status'),
-  startBootstrap: () => ipcRenderer.invoke('bootstrap:start'),
-  onBootstrapProgress: (callback) => ipcRenderer.on('bootstrap:progress', (_, message) => callback(message))
+  chat: (payload) => ipcRenderer.invoke('chat', payload), getSettings: () => ipcRenderer.invoke('settings:get'), setSettings: (value) => ipcRenderer.invoke('settings:set', value), getMemory: () => ipcRenderer.invoke('memory:get'), clearMemory: () => ipcRenderer.invoke('memory:clear'), test: () => ipcRenderer.invoke('test'), bootstrapStatus: () => ipcRenderer.invoke('bootstrap:status'), startBootstrap: () => ipcRenderer.invoke('bootstrap:start'), onBootstrapProgress: (callback) => ipcRenderer.on('bootstrap:progress', (_, message) => callback(message)),
+  agentRun: (goal) => ipcRenderer.invoke('agent:run', goal), agentQueue: (goal) => ipcRenderer.invoke('agent:queue', goal), agentTasks: () => ipcRenderer.invoke('agent:tasks'), agentKnowledge: () => ipcRenderer.invoke('agent:knowledge'), onAgentProgress: (callback) => ipcRenderer.on('agent:progress', (_, message) => callback(message))
 });
