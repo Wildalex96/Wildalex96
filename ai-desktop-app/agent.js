@@ -1,0 +1,14 @@
+const fs=require('fs'),path=require('path'),{spawn}=require('child_process');
+class Agent{constructor({root,ollama,model,web,notify}){this.root=root;this.ollama=ollama;this.model=model;this.web=web;this.notify=notify||(()=>{});this.dir=path.join(root,'agent');fs.mkdirSync(this.dir,{recursive:true});this.file=path.join(this.dir,'state.json');this.state=this.load();this.running=false;}
+load(){try{return JSON.parse(fs.readFileSync(this.file,'utf8'));}catch{return {tasks:[],knowledge:[],logs:[]};}}
+save(){fs.writeFileSync(this.file,JSON.stringify(this.state,null,2));}
+log(x){this.state.logs.push({at:new Date().toISOString(),text:x});this.state.logs=this.state.logs.slice(-500);this.save();this.notify(x);}
+async ask(prompt){return this.ollama([{role:'system',content:'You are LocalMind autonomous agent. Be factual, concise, and return valid JSON when requested.'},{role:'user',content:prompt}]);}
+async plan(goal){const raw=await this.ask(`Create an executable research plan for this goal: ${goal}. Return JSON only: {"steps":[{"title":string,"query":string,"done":false}]} with at most 8 steps.`);const clean=raw.replace(/```json|```/g,'').trim();return JSON.parse(clean);}
+async execute(goal){if(this.running)throw new Error('Агент уже выполняет задачу');this.running=true;try{this.log('Начинаю автономную задачу: '+goal);const plan=await this.plan(goal);const task={id:Date.now(),goal,steps:plan.steps,status:'running',createdAt:new Date().toISOString()};this.state.tasks.push(task);this.save();let evidence=[];for(let i=0;i<task.steps.length;i++){const step=task.steps[i];this.log(`Шаг ${i+1}/${task.steps.length}: ${step.title}`);const result=await this.web(step.query);evidence.push({query:step.query,result:(result||'').slice(0,10000)});step.done=true;this.save();}
+const synthesis=await this.ask(`Goal: ${goal}\nResearch evidence:\n${JSON.stringify(evidence)}\nProduce JSON only: {"answer":string,"facts":[string],"uncertainties":[string]}. Do not invent facts.`);let out;try{out=JSON.parse(synthesis.replace(/```json|```/g,'').trim());}catch{out={answer:synthesis,facts:[],uncertainties:[]};}for(const f of (out.facts||[])){if(!this.state.knowledge.includes(f))this.state.knowledge.push(f);}this.state.knowledge=this.state.knowledge.slice(-5000);task.status='completed';task.result=out;task.completedAt=new Date().toISOString();this.save();this.log('Автономная задача завершена.');return out;}catch(e){this.log('Ошибка агента: '+e.message);throw e;}finally{this.running=false;}}
+async createTask(goal){const task={id:Date.now(),goal,status:'queued',createdAt:new Date().toISOString()};this.state.tasks.push(task);this.save();return task;}
+list(){return this.state.tasks.slice(-100).reverse();}knowledgeList(){return this.state.knowledge.slice(-200).reverse();}
+async runQueued(){const q=this.state.tasks.find(t=>t.status==='queued');if(q)return this.execute(q.goal);}
+}
+module.exports=Agent;
