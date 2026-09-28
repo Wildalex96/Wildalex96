@@ -1,0 +1,24 @@
+{
+  "description": "Language profiles for LocalMind code generation/execution. A language is executable only when its runtime/compiler exists inside the disposable sandbox image.",
+  "languages": {
+    "python": {"extensions":["py"],"command":"python C:\\work\\main.py"},
+    "javascript": {"extensions":["js","mjs"],"command":"node C:\\work\\main.js"},
+    "typescript": {"extensions":["ts"],"command":"npx --yes tsx C:\\work\\main.ts"},
+    "powershell": {"extensions":["ps1"],"command":"powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File C:\\work\\main.ps1"},
+    "c": {"extensions":["c"],"command":"gcc C:\\work\\main.c -o C:\\work\\main.exe && C:\\work\\main.exe"},
+    "cpp": {"extensions":["cpp","cc","cxx"],"command":"g++ C:\\work\\main.cpp -o C:\\work\\main.exe && C:\\work\\main.exe"},
+    "csharp": {"extensions":["cs"],"command":"dotnet run --project C:\\work\\project.csproj --no-restore"},
+    "java": {"extensions":["java"],"command":"javac C:\\work\\Main.java && java -cp C:\\work Main"},
+    "go": {"extensions":["go"],"command":"go run C:\\work\\main.go"},
+    "rust": {"extensions":["rs"],"command":"rustc C:\\work\\main.rs -o C:\\work\\main.exe && C:\\work\\main.exe"},
+    "ruby": {"extensions":["rb"],"command":"ruby C:\\work\\main.rb"},
+    "php": {"extensions":["php"],"command":"php C:\\work\\main.php"},
+    "kotlin": {"extensions":["kt"],"command":"kotlinc C:\\work\\Main.kt -include-runtime -d C:\\work\\main.jar && java -jar C:\\work\\main.jar"},
+    "swift": {"extensions":["swift"],"command":"swiftc C:\\work\\main.swift -o C:\\work\\main.exe && C:\\work\\main.exe"},
+    "lua": {"extensions":["lua"],"command":"lua C:\\work\\main.lua"},
+    "r": {"extensions":["r"],"command":"Rscript C:\\work\\main.r"},
+    "perl": {"extensions":["pl"],"command":"perl C:\\work\\main.pl"},
+    "bash": {"extensions":["sh"],"command":"bash C:\\work\\main.sh"},
+    "sql": {"extensions":["sql"],"command":"sqlite3 C:\\work\\db.sqlite < C:\\work\\main.sql"}
+  }
+}
