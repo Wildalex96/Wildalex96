@@ -55,5 +55,4 @@ pkg.scripts.migrate = "npx prisma@6.19.0 migrate deploy --schema=prisma/schema.p
 fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
 NODE
 
-rm -rf spark/server/node_modules
 echo "Spark source restored; Prisma 6.19.0, NodeNext, ioredis named export, dotenv 18.0.4"
