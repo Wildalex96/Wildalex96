@@ -55,4 +55,30 @@ pkg.scripts.migrate = "npx prisma@6.19.0 migrate deploy --schema=prisma/schema.p
 fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
 NODE
 
+
+# Free Render plans do not expose the service Shell, so make database migrations
+# part of the API startup. Prisma migrate deploy is idempotent and safe to rerun.
+if [ -f spark/server/dist/index.js ] && [ ! -f spark/server/dist/index.app.js ]; then
+  mv spark/server/dist/index.js spark/server/dist/index.app.js
+  cat > spark/server/dist/index.js <<'EOF'
+import { spawnSync } from "node:child_process";
+
+const result = spawnSync("node_modules/.bin/prisma", [
+  "migrate",
+  "deploy",
+  "--schema=prisma/schema.prisma"
+], {
+  cwd: process.cwd(),
+  env: process.env,
+  stdio: "inherit"
+});
+
+if (result.status !== 0) {
+  process.exit(result.status ?? 1);
+}
+
+await import("./index.app.js");
+EOF
+fi
+
 echo "Spark source restored; Prisma 6.19.0, NodeNext, ioredis named export, dotenv 18.0.4"
