@@ -1,7 +1,7 @@
 name: Build LocalMind AI for Windows
 on:
   push:
-    branches: [ ai-desktop-app ]
+    branches: [ ai-desktop-app, localmind-agent-2 ]
     paths:
       - 'ai-desktop-app/**'
       - '.github/workflows/build-localmind-windows.yml'
@@ -26,6 +26,14 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
+      - name: Validate JavaScript
+        shell: pwsh
+        run: |
+          node --check main.js
+          node --check preload.js
+          node --check renderer.js
+          node --check agent.js
+          node --check sandbox/windows-sandbox-runner.js
       - name: Build Windows installer
         run: npm run dist
       - name: Upload installer artifact
