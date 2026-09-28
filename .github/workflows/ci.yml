@@ -1,0 +1,29 @@
+name: Spark CI
+on:
+  push:
+    branches: [main, spark-production]
+  pull_request:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install server
+        working-directory: spark/server
+        run: npm install
+      - name: Prisma generate
+        working-directory: spark/server
+        run: npx prisma generate
+      - name: Build server
+        working-directory: spark/server
+        run: npx tsc
+      - name: Install client
+        working-directory: spark/client
+        run: npm install
+      - name: Build client
+        working-directory: spark/client
+        run: npm run build
