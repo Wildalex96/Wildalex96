@@ -3,8 +3,7 @@ set -euo pipefail
 mkdir -p spark
 cat .spark-bundle/part* | base64 -d | xz -d | tar -x -C spark
 
-# Normalize the archived compact Prisma schema to Prisma 6 syntax and make
-# TypeScript 7's source-root requirement explicit for the existing output tree.
+# Normalize archived sources for the current Node/TypeScript toolchain.
 node <<'NODE'
 const fs = require("fs");
 
@@ -34,6 +33,12 @@ ts.compilerOptions = ts.compilerOptions || {};
 ts.compilerOptions.rootDir = "./src";
 fs.writeFileSync(tsconfigPath, JSON.stringify(ts, null, 2) + "\n");
 
+for (const path of ["spark/server/src/index.ts", "spark/server/src/worker.ts"]) {
+  let c = fs.readFileSync(path, "utf8");
+  c = c.replaceAll('import IORedis from "ioredis";', 'import { default as IORedis } from "ioredis";');
+  fs.writeFileSync(path, c);
+}
+
 const pkgPath = "spark/server/package.json";
 const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
 pkg.dependencies = pkg.dependencies || {};
@@ -47,4 +52,4 @@ fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
 NODE
 
 rm -rf spark/server/node_modules
-echo "Spark source restored; Prisma 6.19.0 pinned, Prisma schema normalized, TS rootDir set"
+echo "Spark source restored; Prisma 6.19.0 pinned, TS rootDir set, ioredis import normalized"
