@@ -16,13 +16,16 @@ jobs:
         run: bash spark-source.sh
       - name: Install server
         working-directory: spark/server
-        run: npm install
+        run: npm install --include=dev
+      - name: Verify Prisma CLI
+        working-directory: spark/server
+        run: npx prisma --version
       - name: Prisma generate
         working-directory: spark/server
-        run: npx prisma generate
+        run: npx prisma@7.10.0 generate --schema=prisma/schema.prisma
       - name: Build server
         working-directory: spark/server
-        run: npm run build
+        run: npx tsc
       - name: Install client
         working-directory: spark/client
         run: npm install
