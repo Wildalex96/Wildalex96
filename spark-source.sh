@@ -30,14 +30,15 @@ fs.writeFileSync(schema, s);
 const tsconfigPath = "spark/server/tsconfig.json";
 const ts = JSON.parse(fs.readFileSync(tsconfigPath, "utf8"));
 ts.compilerOptions = ts.compilerOptions || {};
-ts.compilerOptions.module = "ES2022";
-ts.compilerOptions.moduleResolution = "node";
+ts.compilerOptions.module = "NodeNext";
+ts.compilerOptions.moduleResolution = "NodeNext";
 ts.compilerOptions.rootDir = "./src";
 fs.writeFileSync(tsconfigPath, JSON.stringify(ts, null, 2) + "\n");
 
 for (const path of ["spark/server/src/index.ts", "spark/server/src/worker.ts"]) {
   let c = fs.readFileSync(path, "utf8");
-  c = c.replaceAll('import IORedis from "ioredis";', 'import IORedis from "ioredis";');
+  c = c.replaceAll('import IORedis from "ioredis";', 'import { Redis as IORedis } from "ioredis";');
+  c = c.replaceAll('import { default as IORedis } from "ioredis";', 'import { Redis as IORedis } from "ioredis";');
   fs.writeFileSync(path, c);
 }
 
@@ -54,4 +55,4 @@ fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
 NODE
 
 rm -rf spark/server/node_modules
-echo "Spark source restored; Prisma 6.19.0 pinned, ESM module resolution normalized"
+echo "Spark source restored; Prisma 6.19.0 pinned, NodeNext restored, ioredis named export normalized"
