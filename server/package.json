@@ -1,0 +1,38 @@
+{
+  "name": "spark-server",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"tsx watch src/index.ts\" \"tsx watch src/worker.ts\"",
+    "start": "node dist/index.js",
+    "worker": "tsx src/worker.ts",
+    "prisma": "prisma",
+    "migrate": "prisma migrate deploy",
+    "build": "prisma generate && tsc"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "latest",
+    "@prisma/client": "latest",
+    "bcryptjs": "latest",
+    "cookie-parser": "latest",
+    "cors": "latest",
+    "dotenv": "latest",
+    "express": "latest",
+    "express-rate-limit": "latest",
+    "helmet": "latest",
+    "jsonwebtoken": "latest",
+    "multer": "latest",
+    "nodemailer": "latest",
+    "bullmq": "latest",
+    "ioredis": "latest",
+    "web-push": "latest",
+    "socket.io": "latest",
+    "@socket.io/redis-adapter": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "prisma": "latest",
+    "tsx": "latest",
+    "typescript": "latest",
+    "concurrently": "latest"
+  }
+}

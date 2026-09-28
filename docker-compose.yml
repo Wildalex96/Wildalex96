@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: postgis/postgis:16-3.5
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: spark
+      POSTGRES_PASSWORD: spark
+      POSTGRES_DB: spark
+    ports: ["5432:5432"]
+    volumes: [spark_pg:/var/lib/postgresql/data]
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports: ["6379:6379"]
+    volumes: [spark_redis:/data]
+    command: ["redis-server","--appendonly","yes"]
+
+  minio:
+    image: minio/minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: spark
+      MINIO_ROOT_PASSWORD: sparksecret
+    ports: ["9000:9000","9001:9001"]
+    volumes: [spark_minio:/data]
+
+volumes:
+  spark_pg:
+  spark_redis:
+  spark_minio:

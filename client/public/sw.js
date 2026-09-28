@@ -1,0 +1,2 @@
+self.addEventListener("push",e=>{if(!e.data)return;const d=e.data.json();e.waitUntil(self.registration.showNotification(d.title,{body:d.body,icon:"/icon-192.png",data:{url:d.url||"/"}}))});
+self.addEventListener("notificationclick",e=>{e.notification.close();e.waitUntil(clients.matchAll({type:"window",includeUncontrolled:true}).then(cs=>{for(const c of cs)if("focus"in c){c.navigate(e.notification.data.url);return c.focus()}return clients.openWindow(e.notification.data.url)}))});
