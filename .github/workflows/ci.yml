@@ -22,7 +22,7 @@ jobs:
         run: npx prisma --version
       - name: Prisma generate
         working-directory: spark/server
-        run: npx prisma@7.10.0 generate --schema=prisma/schema.prisma
+        run: npx prisma@6.19.0 generate --schema=prisma/schema.prisma
       - name: Build server
         working-directory: spark/server
         run: npx tsc
